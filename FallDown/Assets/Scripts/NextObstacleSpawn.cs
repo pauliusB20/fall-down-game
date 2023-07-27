@@ -14,7 +14,12 @@ public class NextObstacleSpawn : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag == playerTag){
             FindObjectOfType<LevelSystemMgr>().NextSpawnPosition = other.gameObject.transform.position;
-            spawnNextObstacle = true;
+            SpawnNextObstacle = true;
+
+            var spawnPoints = GameObject.FindGameObjectsWithTag("Pickup");
+            foreach (var spawnPoint in spawnPoints) {
+                spawnPoint.tag = "-";
+            }
 
             StartCoroutine(handleDespawn());
         }

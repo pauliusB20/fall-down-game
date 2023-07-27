@@ -12,6 +12,8 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] int maxSpawnCount = 10;
     [SerializeField] bool levelisFinished = false;
     [SerializeField] bool endingPlatformSpawned = false;
+    [SerializeField] string pickupPositionTag = "Pickup";
+    [SerializeField] GameObject pickup;
 
     public Vector3 NextSpawnPosition { set { nextSpawnPosition = value; } get { return nextSpawnPosition; }}
     private float yPosOffset;
@@ -21,7 +23,12 @@ public class LevelSystemMgr : MonoBehaviour
     void Start()
     {
         var iniObstaclePos = player.transform.position;
-        Instantiate(obstacles[0], iniObstaclePos, Quaternion.identity);
+        var initObstacle = Instantiate(obstacles[0], iniObstaclePos, Quaternion.identity);
+        var spawnPoints = GameObject.FindGameObjectsWithTag(pickupPositionTag);
+
+        foreach (var spawnPoint in spawnPoints) {
+            spawnPoint.tag = "-";
+        }
     }
 
     // Update is called once per frame
@@ -43,7 +50,7 @@ public class LevelSystemMgr : MonoBehaviour
         }
 
         // If a new position is received spawning new obstacle
-        if (nextSpawnPosition != Vector3.zero && !levelisFinished){
+        if (nextSpawnPosition != Vector3.zero && !levelisFinished) {
             if (yPosOffset == 0f)
                 yPosOffset = player.transform.position.y / 4;
 
@@ -68,6 +75,17 @@ public class LevelSystemMgr : MonoBehaviour
 
             var newObstaclePosition = new Vector3(xPos, yPos, zPos);
             var newObstacle = Instantiate(obstacles[obstacleToSpawnIdx], newObstaclePosition, Quaternion.identity);
+
+            // Spawning pickup objects
+            var spawnPoints = GameObject.FindGameObjectsWithTag(pickupPositionTag);
+
+            if (spawnPoints.Length > 0 && spawnCount + 1 != maxSpawnCount) {
+               for (var sIdx = 0; sIdx < spawnPoints.Length; sIdx ++) {
+                    var spawnPos = spawnPoints[sIdx].transform.position;
+                    var newPickup = Instantiate(pickup, spawnPos, Quaternion.identity);
+                }
+            }
+
 
             currentSpawnPosition = newObstacle.transform.position;
             nextSpawnPosition = Vector3.zero;
