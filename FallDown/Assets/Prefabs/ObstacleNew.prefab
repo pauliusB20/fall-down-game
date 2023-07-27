@@ -199,7 +199,7 @@ MonoBehaviour:
   playerTag: Player
   spawnNextObstacle: 0
   mainObstacleObject: {fileID: 2142572170221111477}
-  delayInSeconds: 1
+  delayInSeconds: 2
 --- !u!1 &5149584877722926215
 GameObject:
   m_ObjectHideFlags: 0

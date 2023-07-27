@@ -14,6 +14,7 @@ public class Pickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag == detectPlayerTag) {
+            FindObjectOfType<LevelSystemMgr>().CollectedPickups++;
             Destroy(gameObject);
         }
     }

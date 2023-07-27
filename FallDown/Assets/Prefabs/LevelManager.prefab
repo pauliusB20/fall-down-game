@@ -54,3 +54,11 @@ MonoBehaviour:
   maxSpawnCount: 10
   levelisFinished: 0
   endingPlatformSpawned: 0
+  pickupPositionTag: Pickup
+  pickup: {fileID: 2022996293274389776, guid: 38410e83ca8f6c7458a2074582347ddc, type: 3}
+  collectedPickups: 0
+  objectsToRemove:
+  - removeType: tag
+    objectTag: Pickup
+  - removeType: destroy
+    objectTag: PickupObject

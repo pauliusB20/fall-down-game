@@ -300,11 +300,6 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 41502658}
-    - target: {fileID: 437534723, guid: 3fc9e0d2f5ceb274b81fd979581dfebb, type: 3}
-      propertyPath: pickup
-      value: 
-      objectReference: {fileID: 2022996293274389776, guid: 38410e83ca8f6c7458a2074582347ddc,
-        type: 3}
     - target: {fileID: 8380516191416730678, guid: 3fc9e0d2f5ceb274b81fd979581dfebb,
         type: 3}
       propertyPath: m_LocalPosition.x

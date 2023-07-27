@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+class LevelObjects 
+{
+    public string removeType;
+    public string objectTag;
+}
+
 public class LevelSystemMgr : MonoBehaviour
 {
     [SerializeField] GameObject player;
@@ -14,8 +21,13 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] bool endingPlatformSpawned = false;
     [SerializeField] string pickupPositionTag = "Pickup";
     [SerializeField] GameObject pickup;
+    [SerializeField] int collectedPickups = 0;
+
+    [SerializeField] List<LevelObjects> objectsToRemove;
 
     public Vector3 NextSpawnPosition { set { nextSpawnPosition = value; } get { return nextSpawnPosition; }}
+    public int CollectedPickups { set { collectedPickups = value; } get { return collectedPickups; }}
+
     private float yPosOffset;
     private int spawnCount = 0;
     private int previousIdx = 0;
@@ -51,6 +63,24 @@ public class LevelSystemMgr : MonoBehaviour
 
         // If a new position is received spawning new obstacle
         if (nextSpawnPosition != Vector3.zero && !levelisFinished) {
+
+            // Cleaning trash objects
+
+            foreach(var objectToRemove in objectsToRemove) {
+                cleanOldObstacleObjects(objectToRemove.removeType, objectToRemove.objectTag);
+            }
+            
+            // var spawnOldPoints = GameObject.FindGameObjectsWithTag("Pickup");
+            // foreach (var spawnOldPoint in spawnOldPoints) {
+            //     spawnOldPoint.tag = "-";
+            // }
+
+            // var pickupObjects = GameObject.FindGameObjectsWithTag("PickupObject");
+            // foreach (var pickup in pickupObjects) {
+            //     Destroy(pickup);
+            // }
+
+            // Spawning new obstacle logic
             if (yPosOffset == 0f)
                 yPosOffset = player.transform.position.y / 4;
 
@@ -91,5 +121,20 @@ public class LevelSystemMgr : MonoBehaviour
             nextSpawnPosition = Vector3.zero;
             spawnCount++;
         }   
+    }
+
+    void cleanOldObstacleObjects(string removeType, string objectTag) {
+        var foundObjects = GameObject.FindGameObjectsWithTag(objectTag);
+        foreach (var foundObject in foundObjects) {
+            switch (removeType.ToLower()) {
+                case "destroy":
+                    Destroy(foundObject);
+                break;
+
+                case "tag": 
+                    foundObject.tag = "-";
+                break;
+            }            
+        }
     }
 }
