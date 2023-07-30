@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 class LevelObjects 
 {
-    public string removeType;
-    public string objectTag;
+    public string RemoveType;
+    public string ObjectTag;
 }
 
 public class LevelSystemMgr : MonoBehaviour
@@ -22,11 +22,14 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] string pickupPositionTag = "Pickup";
     [SerializeField] GameObject pickup;
     [SerializeField] int collectedPickups = 0;
+    [SerializeField] float despawnDelaySeconds = 2f;
+    [SerializeField] float nextSpawnDelay = 1f;
 
     [SerializeField] List<LevelObjects> objectsToRemove;
 
     public Vector3 NextSpawnPosition { set { nextSpawnPosition = value; } get { return nextSpawnPosition; }}
     public int CollectedPickups { set { collectedPickups = value; } get { return collectedPickups; }}
+    public float DespawnDelaySeconds { set { despawnDelaySeconds = value; } get { return despawnDelaySeconds; }}
 
     private float yPosOffset;
     private int spawnCount = 0;
@@ -56,29 +59,18 @@ public class LevelSystemMgr : MonoBehaviour
         }
 
         if (spawnCount >= maxSpawnCount && !endingPlatformSpawned){
-            levelisFinished = true;
+            levelisFinished = true;            
             Instantiate(endingPlatform, currentSpawnPosition, Quaternion.identity);
             endingPlatformSpawned = true;
         }
 
         // If a new position is received spawning new obstacle
-        if (nextSpawnPosition != Vector3.zero && !levelisFinished) {
-
+        if (nextSpawnPosition != Vector3.zero && !levelisFinished) {            
+           
             // Cleaning trash objects
-
             foreach(var objectToRemove in objectsToRemove) {
-                cleanOldObstacleObjects(objectToRemove.removeType, objectToRemove.objectTag);
+                cleanOldObstacleObjects(objectToRemove.RemoveType, objectToRemove.ObjectTag);
             }
-            
-            // var spawnOldPoints = GameObject.FindGameObjectsWithTag("Pickup");
-            // foreach (var spawnOldPoint in spawnOldPoints) {
-            //     spawnOldPoint.tag = "-";
-            // }
-
-            // var pickupObjects = GameObject.FindGameObjectsWithTag("PickupObject");
-            // foreach (var pickup in pickupObjects) {
-            //     Destroy(pickup);
-            // }
 
             // Spawning new obstacle logic
             if (yPosOffset == 0f)
@@ -91,7 +83,7 @@ public class LevelSystemMgr : MonoBehaviour
             // For getting random obstacle spawn position
             var randomLimit = obstacles.Length;
             var obstacleToSpawnIdx = Random.Range(0, randomLimit);
-             
+                
             // For making sure that the same number would not be repeated sequentially
             if (obstacleToSpawnIdx == previousIdx){
                 while (obstacleToSpawnIdx == previousIdx) {
@@ -110,31 +102,24 @@ public class LevelSystemMgr : MonoBehaviour
             var spawnPoints = GameObject.FindGameObjectsWithTag(pickupPositionTag);
 
             if (spawnPoints.Length > 0 && spawnCount + 1 != maxSpawnCount) {
-               for (var sIdx = 0; sIdx < spawnPoints.Length; sIdx ++) {
+                for (var sIdx = 0; sIdx < spawnPoints.Length; sIdx ++) {
                     var spawnPos = spawnPoints[sIdx].transform.position;
                     var newPickup = Instantiate(pickup, spawnPos, Quaternion.identity);
                 }
             }
-
 
             currentSpawnPosition = newObstacle.transform.position;
             nextSpawnPosition = Vector3.zero;
             spawnCount++;
         }   
     }
+    
+    
 
     void cleanOldObstacleObjects(string removeType, string objectTag) {
         var foundObjects = GameObject.FindGameObjectsWithTag(objectTag);
         foreach (var foundObject in foundObjects) {
-            switch (removeType.ToLower()) {
-                case "destroy":
-                    Destroy(foundObject);
-                break;
-
-                case "tag": 
-                    foundObject.tag = "-";
-                break;
-            }            
+            foundObject.tag = "-";           
         }
     }
 }

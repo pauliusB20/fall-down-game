@@ -6,9 +6,8 @@ public class NextObstacleSpawn : MonoBehaviour
 {
     [SerializeField] string playerTag = "Player";
     [SerializeField] bool spawnNextObstacle = false;
-    [SerializeField] GameObject mainObstacleObject;
-    [SerializeField] float delayInSeconds = 2f;
-
+    // [SerializeField] GameObject mainObstacleObject;
+    
     public bool SpawnNextObstacle { set { spawnNextObstacle = value; } get { return spawnNextObstacle; }}
 
     private void OnTriggerEnter(Collider other) {
@@ -21,8 +20,11 @@ public class NextObstacleSpawn : MonoBehaviour
     }
 
     IEnumerator handleDespawn(){
+        var systemMgr = FindObjectOfType<LevelSystemMgr>();
+        var delayInSeconds = systemMgr.DespawnDelaySeconds;
+        var parentObstacleObj = gameObject.transform.parent.gameObject.transform.parent.gameObject;        
         yield return new WaitForSeconds(delayInSeconds);
-        Destroy(mainObstacleObject);
+        Destroy(parentObstacleObj);
     }
    
 }
