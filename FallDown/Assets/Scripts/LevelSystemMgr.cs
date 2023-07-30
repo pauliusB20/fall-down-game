@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-class LevelObjects 
-{
-    public string RemoveType;
-    public string ObjectTag;
-}
 
 public class LevelSystemMgr : MonoBehaviour
 {
@@ -19,17 +13,19 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] int maxSpawnCount = 10;
     [SerializeField] bool levelisFinished = false;
     [SerializeField] bool endingPlatformSpawned = false;
+    [SerializeField] bool playerDestroyed = false;
     [SerializeField] string pickupPositionTag = "Pickup";
     [SerializeField] GameObject pickup;
     [SerializeField] int collectedPickups = 0;
     [SerializeField] float despawnDelaySeconds = 2f;
-    [SerializeField] float nextSpawnDelay = 1f;
+    [SerializeField] float delayToGameOver = 2f;
 
-    [SerializeField] List<LevelObjects> objectsToRemove;
+    [SerializeField] List<string> despawnMarkTags;
 
     public Vector3 NextSpawnPosition { set { nextSpawnPosition = value; } get { return nextSpawnPosition; }}
     public int CollectedPickups { set { collectedPickups = value; } get { return collectedPickups; }}
     public float DespawnDelaySeconds { set { despawnDelaySeconds = value; } get { return despawnDelaySeconds; }}
+    public bool PlayerDestroyed { set { playerDestroyed = value; } get { return playerDestroyed; }}
 
     private float yPosOffset;
     private int spawnCount = 0;
@@ -49,6 +45,8 @@ public class LevelSystemMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
+
+        // Checking if player has passed the level
         var levelFinish = FindObjectOfType<LevelFinish>();
         if (levelFinish) {
           if (levelFinish.PlayerLanded)
@@ -58,18 +56,26 @@ public class LevelSystemMgr : MonoBehaviour
           }
         }
 
+        // Checking if an ending platform needs to be spawned
         if (spawnCount >= maxSpawnCount && !endingPlatformSpawned){
             levelisFinished = true;            
             Instantiate(endingPlatform, currentSpawnPosition, Quaternion.identity);
             endingPlatformSpawned = true;
         }
 
+        // Checking if player is destroyed
+        if (playerDestroyed) {
+            levelisFinished = true;
+            playerDestroyed = false;
+            StartCoroutine(handlePlayerDestruction());
+        }
+
         // If a new position is received spawning new obstacle
         if (nextSpawnPosition != Vector3.zero && !levelisFinished) {            
            
             // Cleaning trash objects
-            foreach(var objectToRemove in objectsToRemove) {
-                cleanOldObstacleObjects(objectToRemove.RemoveType, objectToRemove.ObjectTag);
+            foreach(var tag in despawnMarkTags) {
+                markSelectedObjects(tag);
             }
 
             // Spawning new obstacle logic
@@ -103,8 +109,10 @@ public class LevelSystemMgr : MonoBehaviour
 
             if (spawnPoints.Length > 0 && spawnCount + 1 != maxSpawnCount) {
                 for (var sIdx = 0; sIdx < spawnPoints.Length; sIdx ++) {
-                    var spawnPos = spawnPoints[sIdx].transform.position;
+                    var spawnPointObj = spawnPoints[sIdx];
+                    var spawnPos = spawnPointObj.transform.position;
                     var newPickup = Instantiate(pickup, spawnPos, Quaternion.identity);
+                    newPickup.transform.SetParent(spawnPointObj.transform);
                 }
             }
 
@@ -112,14 +120,20 @@ public class LevelSystemMgr : MonoBehaviour
             nextSpawnPosition = Vector3.zero;
             spawnCount++;
         }   
-    }
-    
-    
+    }    
 
-    void cleanOldObstacleObjects(string removeType, string objectTag) {
+    void markSelectedObjects(string objectTag) {
         var foundObjects = GameObject.FindGameObjectsWithTag(objectTag);
         foreach (var foundObject in foundObjects) {
             foundObject.tag = "-";           
         }
+    }
+
+    IEnumerator handlePlayerDestruction() {
+        Debug.Log("Game Over: Player died!");
+        yield return new WaitForSeconds(delayToGameOver);
+
+        // Restart logic
+        FindObjectOfType<SceneLoader>().restartLevel();
     }
 }

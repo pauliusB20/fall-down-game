@@ -17,6 +17,7 @@ public class ThirdPersonCamera : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {       
-        transform.position = playerPos.position + offset;
+        if (playerPos)
+            transform.position = playerPos.position + offset;
     }
 }
