@@ -19,6 +19,7 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] int collectedPickups = 0;
     [SerializeField] float despawnDelaySeconds = 2f;
     [SerializeField] float delayToGameOver = 2f;
+    [SerializeField] float yPosOffset = 30f;
 
     [SerializeField] List<string> despawnMarkTags;
 
@@ -27,7 +28,7 @@ public class LevelSystemMgr : MonoBehaviour
     public float DespawnDelaySeconds { set { despawnDelaySeconds = value; } get { return despawnDelaySeconds; }}
     public bool PlayerDestroyed { set { playerDestroyed = value; } get { return playerDestroyed; }}
 
-    private float yPosOffset;
+   
     private int spawnCount = 0;
     private int previousIdx = 0;
 
@@ -78,10 +79,7 @@ public class LevelSystemMgr : MonoBehaviour
                 markSelectedObjects(tag);
             }
 
-            // Spawning new obstacle logic
-            if (yPosOffset == 0f)
-                yPosOffset = player.transform.position.y / 4;
-
+            // Spawning new obstacle logic          
             var yPos = nextSpawnPosition.y - yPosOffset;
             var xPos = nextSpawnPosition.x;
             var zPos = nextSpawnPosition.z;

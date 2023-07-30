@@ -189,6 +189,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4623932928290238217, guid: 09fd6a19d1cc6d34da504949d1ee6ea2,
         type: 3}
+    - target: {fileID: 437534723, guid: 3fc9e0d2f5ceb274b81fd979581dfebb, type: 3}
+      propertyPath: yPosOffset
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 8380516191416730678, guid: 3fc9e0d2f5ceb274b81fd979581dfebb,
         type: 3}
       propertyPath: m_LocalPosition.x
