@@ -10,13 +10,16 @@ public class NextObstacleSpawn : MonoBehaviour
     
     public bool SpawnNextObstacle { set { spawnNextObstacle = value; } get { return spawnNextObstacle; }}
 
-    private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.tag == playerTag){
-            FindObjectOfType<LevelSystemMgr>().NextSpawnPosition = other.gameObject.transform.position;
+
+    private void OnTriggerEnter(Collider other) {       
+        var lvlSysMgr = FindObjectOfType<LevelSystemMgr>();
+        if (other.gameObject.tag == playerTag && !lvlSysMgr.LevelIsFinished){
+            lvlSysMgr.NextSpawnPosition = gameObject.transform.position;
             SpawnNextObstacle = true;          
 
             StartCoroutine(handleDespawn());
         }
+
     }
 
     IEnumerator handleDespawn(){
