@@ -149,6 +149,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 437534723, guid: 3fc9e0d2f5ceb274b81fd979581dfebb, type: 3}
+      propertyPath: obstacles.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 437534723, guid: 3fc9e0d2f5ceb274b81fd979581dfebb, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 41502658}
@@ -181,6 +185,11 @@ PrefabInstance:
       propertyPath: maxDoorSpawnPositionDistance
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 437534723, guid: 3fc9e0d2f5ceb274b81fd979581dfebb, type: 3}
+      propertyPath: obstacles.Array.data[5]
+      value: 
+      objectReference: {fileID: 8626984481059883959, guid: 787a9809874c49d47b21cceec198f53e,
+        type: 3}
     - target: {fileID: 8380516191416730678, guid: 3fc9e0d2f5ceb274b81fd979581dfebb,
         type: 3}
       propertyPath: m_LocalPosition.x
