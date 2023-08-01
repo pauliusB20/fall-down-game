@@ -7,6 +7,8 @@ public class Door : MonoBehaviour
    [SerializeField] string playerTag = "Player";
    [SerializeField] int doorId = 1;
 
+   public int DoorId { set { doorId = value; } get { return doorId; }}
+
 
    private void OnCollisionEnter(Collision other) {
          if (other.gameObject.tag == playerTag) {
@@ -16,7 +18,7 @@ public class Door : MonoBehaviour
             if (keysInventory.Count == 0)
             {
                 // Note: In the future: player is able to open the door without the key, but for that he will need to take some damage
-                Debug.Log("Key is not present in the player's inventory!");
+                Debug.Log("No key is not present in the player's inventory!");
                 return;
             }
 

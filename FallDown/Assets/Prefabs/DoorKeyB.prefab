@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 736097708207237298}
   - component: {fileID: 5069636966486373668}
   m_Layer: 0
-  m_Name: DoorKey
+  m_Name: DoorKeyB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 250987f58ef04a041857294e10c80cfe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,7 +106,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.9603681, g: 0.9811321, b: 0.06941971, a: 1}
+  m_Color: {r: 0.3633899, g: 0.98039216, b: 0.0705882, a: 1}
   m_Intensity: 1
   m_Range: 3
   m_SpotAngle: 30
@@ -168,3 +168,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddcbf0d3b0a851f4887b5fc681fe2fc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTag: Player
+  doorId: 1

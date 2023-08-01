@@ -8,7 +8,8 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject[] obstacles;
     [SerializeField] GameObject endingPlatform;
-    [SerializeField] GameObject doorObstacle;
+    [SerializeField] int maxDoorSpawnPositionDistance = 4;
+    [SerializeField] List<GameObject> doorObstacles;
     [SerializeField] Vector3 nextSpawnPosition;
     [SerializeField] Vector3 currentSpawnPosition;
     [SerializeField] int maxSpawnCount = 10;
@@ -17,7 +18,7 @@ public class LevelSystemMgr : MonoBehaviour
     [SerializeField] bool playerDestroyed = false;
     [SerializeField] string pickupPositionTag = "Pickup";
     [SerializeField] GameObject pickup;
-    [SerializeField] GameObject doorKey;
+    [SerializeField] List<GameObject> doorKeys;
     [SerializeField] int collectedPickups = 0;
     [SerializeField] float despawnDelaySeconds = 2f;
     [SerializeField] float delayToGameOver = 2f;
@@ -34,7 +35,11 @@ public class LevelSystemMgr : MonoBehaviour
     private int spawnCount = 0;
     private int previousIdx = -1;
     private bool doorKeySpawned = false;
-    private int spawnAtObstacleIdx = 0;
+    private List<int> doorAtObstaclesIdx;
+    private int usedDoorKeyIdx = 0;
+    private int usedDoorIdx = 0;
+    private int spawnAtDoorIdx = -1;
+    private int previousPositionDistance = -1;
 
     void Start()
     {
@@ -47,7 +52,28 @@ public class LevelSystemMgr : MonoBehaviour
         }
 
         // Pick door spawn time index
-        spawnAtObstacleIdx = Random.Range(0, maxSpawnCount);
+        doorAtObstaclesIdx = new List<int>();
+
+        var doorAmount = doorObstacles.Count;
+
+        for (var dIdx = 0; dIdx < doorAmount; dIdx++) {
+            var doorObstacleIdx = Random.Range(0, maxSpawnCount);
+
+            if (!doorAtObstaclesIdx.Contains(doorObstacleIdx)) {
+                doorAtObstaclesIdx.Add(doorObstacleIdx);
+                continue;
+            }
+
+            while (doorAtObstaclesIdx.Contains(doorObstacleIdx)) {
+                doorObstacleIdx = Random.Range(0, maxSpawnCount);
+
+                if (!doorAtObstaclesIdx.Contains(doorObstacleIdx)) {
+                    doorAtObstaclesIdx.Add(doorObstacleIdx);
+                    break;
+                }
+            }
+        } 
+       
     }
 
     // Update is called once per frame
@@ -96,9 +122,11 @@ public class LevelSystemMgr : MonoBehaviour
                 
             // Obstacle  spawning logic
             GameObject obstacleToSpawn;
-            if (doorKeySpawned) {
-                obstacleToSpawn = doorObstacle;
+            if (doorKeySpawned && spawnCount == spawnAtDoorIdx) {
+                obstacleToSpawn = doorObstacles[usedDoorIdx];
                 doorKeySpawned = false;
+                spawnAtDoorIdx = -1;
+                usedDoorIdx++;
             }
             else {
                // For getting random obstacle spawn position
@@ -134,10 +162,28 @@ public class LevelSystemMgr : MonoBehaviour
                     var spawnPos = spawnPointObj.transform.position;
                     GameObject usePickupObj;
 
-                    // Checking if door key could spawned
-                    if (spawnAtObstacleIdx == spawnCount && !doorKeySpawned) {
-                        usePickupObj = doorKey;
+                    // Checking if a certain door key could spawned
+                    var doorIdx = spawnCount;                   
+                        
+                    
+                    if (doorAtObstaclesIdx.Contains(doorIdx) && !doorKeySpawned) {
+
+                        // Picking random position
+                        var positionDistance = Random.Range(2, maxDoorSpawnPositionDistance);
+                        while (positionDistance == previousPositionDistance) {
+                            positionDistance = Random.Range(2, maxDoorSpawnPositionDistance);
+                            if (positionDistance != previousPositionDistance) {                               
+                                break;
+                            }
+                        }
+                        previousPositionDistance = positionDistance;
+
+                        spawnAtDoorIdx = doorIdx + Random.Range(2, maxDoorSpawnPositionDistance);
+                        usePickupObj = doorKeys[usedDoorKeyIdx];
+                        doorAtObstaclesIdx.Remove(doorIdx);
+                        usedDoorKeyIdx++;                        
                         doorKeySpawned = true;
+
                     } else {
                         usePickupObj = pickup;
                     }

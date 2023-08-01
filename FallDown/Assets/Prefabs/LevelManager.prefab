@@ -45,20 +45,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   obstacles:
-  - {fileID: 2142572170221111477, guid: 362631770fde5f840ac916ff09e6f2cd, type: 3}
-  - {fileID: 233571750435295092, guid: 19efb62bde6a73d499728c78126f0dfb, type: 3}
+  - {fileID: 6844943616524350576, guid: 362631770fde5f840ac916ff09e6f2cd, type: 3}
+  - {fileID: 8075407432587349821, guid: 19efb62bde6a73d499728c78126f0dfb, type: 3}
+  - {fileID: 4623932928290238217, guid: 09fd6a19d1cc6d34da504949d1ee6ea2, type: 3}
+  - {fileID: 4792741146607722727, guid: 5e7fa9552ee8ed541b7d33e889b5857e, type: 3}
+  - {fileID: 6987369883405715077, guid: 80155e3745784c44693e92afe3784a51, type: 3}
   endingPlatform: {fileID: 7677845630687524127, guid: 99980349be2387b48a6140674a6183aa,
+    type: 3}
+  doorObstacle: {fileID: 2468515021454549532, guid: 5c3b844b316fd3043b05e196f6176f0a,
     type: 3}
   nextSpawnPosition: {x: 0, y: 0, z: 0}
   currentSpawnPosition: {x: 0, y: 0, z: 0}
-  maxSpawnCount: 10
-  levelisFinished: 0
+  maxSpawnCount: 15
+  levelIsFinished: 0
   endingPlatformSpawned: 0
+  playerDestroyed: 0
   pickupPositionTag: Pickup
   pickup: {fileID: 2022996293274389776, guid: 38410e83ca8f6c7458a2074582347ddc, type: 3}
+  doorKey: {fileID: 2038881397063069316, guid: 3011919a8b9735742945c8c8ac74593e, type: 3}
   collectedPickups: 0
-  objectsToRemove:
-  - removeType: tag
-    objectTag: Pickup
-  - removeType: destroy
-    objectTag: PickupObject
+  despawnDelaySeconds: 8
+  delayToGameOver: 2
+  yPosOffset: 23
+  despawnMarkTags:
+  - Pickup
